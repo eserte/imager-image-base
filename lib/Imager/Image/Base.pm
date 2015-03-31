@@ -8,7 +8,7 @@ package Imager::Image::Base;
 
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 use Imager ();
 
