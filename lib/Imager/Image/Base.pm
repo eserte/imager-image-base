@@ -51,6 +51,9 @@ Convert an L<Image::Base> object into a L<Imager> object.
 The performance of this module is probably only suitable for small,
 icon-ish images.
 
+To do the conversion in the other direction (convert L<Imager> objects
+into L<Image::Base>-compatible objects) use L<Image::Base::Imager>.
+
 =head1 AUTHOR
 
 Slaven Rezic
