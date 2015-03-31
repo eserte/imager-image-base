@@ -1,6 +1,8 @@
 use strict;
 use ExtUtils::MakeMaker;
 
+my $is_devel_host = defined $ENV{USER} && $ENV{USER} eq 'eserte' && $^O =~ /bsd/i && -f "../../perl.release.mk";
+
 my $eumm_recent_enough = $ExtUtils::MakeMaker::VERSION >= 6.54;
 if (!$eumm_recent_enough) {
     *MY::dist_core = sub {
@@ -33,3 +35,19 @@ WriteMakefile(
      : ()
     ),
 );
+
+sub MY::postamble {
+    my $self = shift;
+    my @ret;
+
+    if ($is_devel_host) {
+	push @ret, <<'EOF';
+
+.include "../../perl.release.mk"
+.include "../../perl.git.mk"
+
+EOF
+    }
+
+    join "\n", @ret;
+}
