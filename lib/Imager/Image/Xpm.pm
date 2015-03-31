@@ -10,8 +10,9 @@ use strict;
 use vars qw($VERSION);
 $VERSION = '0.01';
 
+use base 'Imager::Image::Base';
+
 use Image::Xpm;
-use Imager::Image::Base;
 
 sub new {
     my($class, %opts) = @_;
@@ -19,7 +20,18 @@ sub new {
     die 'file option is mandatory' if !defined $file;
     die 'Unhandled options: ' . join(' ', %opts) if %opts;
     my $xpm = Image::Xpm->new(-file => $file);
-    Imager::Image::Base->convert($xpm);
+    Imager::Image::Xpm->convert($xpm);
+}
+
+sub _has_transparency {
+    my(undef, $image_base) = @_;
+    my $palette = $image_base->get('-palette');
+    if ($palette) {
+	for my $color_spec (values %$palette) {
+	    return 1 if ($color_spec->{'c'}||'') =~m{^none$}i;
+	}
+    }
+    0;
 }
 
 1;
@@ -37,6 +49,8 @@ Imager::Image::Xpm - load XPM files into Imager objects
 =head1 DESCRIPTION
 
 Load a XPM file into an L<Imager> object using L<Image::Xpm>.
+
+The "none" pseudo color will be converted into transparent pixels.
 
 =head2 EXAMPLE
 

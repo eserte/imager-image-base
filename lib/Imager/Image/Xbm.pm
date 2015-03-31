@@ -10,8 +10,9 @@ use strict;
 use vars qw($VERSION);
 $VERSION = '0.01';
 
+use base 'Imager::Image::Base';
+
 use Image::Xbm;
-use Imager::Image::Base;
 
 sub new {
     my($class, %opts) = @_;
@@ -19,7 +20,7 @@ sub new {
     die 'file option is mandatory' if !defined $file;
     die 'Unhandled options: ' . join(' ', %opts) if %opts;
     my $xbm = Image::Xbm->new(-file => $file);
-    Imager::Image::Base->convert($xbm);
+    $class->convert($xbm);
 }
 
 1;

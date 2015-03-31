@@ -13,12 +13,18 @@ $VERSION = '0.01';
 use Imager ();
 
 sub convert {
-    my(undef, $image_base) = @_;
+    my($class, $image_base) = @_;
     my($w, $h) = $image_base->get('-width', '-height');
-    my $imager = Imager->new(xsize => $w, ysize => $h);
+    my $has_transparency = $class->can('_has_transparency') && $class->_has_transparency($image_base);
+    my $imager = Imager->new(xsize => $w, ysize => $h, (channels => 4) x!! $has_transparency);
     for my $x (0 .. $w-1) {
 	for my $y (0 .. $h-1) {
 	    my $color = $image_base->xy($x, $y);
+	    if ($color =~ m{^(#..)..(..)..(..)..$}) { # convert #RRRRGGGGBBBB to #RRGGBB
+		$color = "$1$2$3";
+	    } elsif ($color =~ m{^none$}i) {
+		$color = '#00000000';
+	    }
 	    $imager->setpixel(x => $x, y => $y, color => $color);
 	}
     }
@@ -41,6 +47,9 @@ Imager::Image::Base - convert Image::Base to Imager
 =head1 DESCRIPTION
 
 Convert an L<Image::Base> object into a L<Imager> object.
+
+The performance of this module is probably only suitable for small,
+icon-ish images.
 
 =head1 AUTHOR
 
