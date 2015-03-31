@@ -15,6 +15,7 @@ use Imager::Image::Xbm;
 
 my $test_xpm = "$FindBin::RealBin/../img/test.xpm";
 my $test_xbm = "$FindBin::RealBin/../img/test.xbm";
+my $museum_xpm = "$FindBin::RealBin/../img/museum.xpm"; # with transparency
 
 ok !eval { Imager::Image::Xpm->new(); 1 };
 like $@, qr{file option is mandatory};
@@ -27,6 +28,18 @@ like $@, qr{unhandled option}i;
     isa_ok $imager_xpm, 'Imager';
     is $imager_xpm->getwidth, 127;
     is $imager_xpm->getheight, 13;
+    my $color = $imager_xpm->getpixel(x=>0, y=>0);
+    is(($color->rgba)[3], 255, 'opaque pixel');
+}
+
+{
+    my $imager_xpm = Imager::Image::Xpm->new(file => $museum_xpm);
+    isa_ok $imager_xpm, 'Imager';
+    is $imager_xpm->getwidth, 12;
+    is $imager_xpm->getheight, 13;
+    my $color = $imager_xpm->getpixel(x=>0, y=>0);
+    is(($color->rgba)[3], 0, 'transparent pixel');
+
 }
 
 {
