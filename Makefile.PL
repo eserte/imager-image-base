@@ -17,6 +17,7 @@ EOF
 WriteMakefile(
     NAME         => 'Imager::Image::Base',
     VERSION_FROM => 'lib/Imager/Image/Base.pm',
+    LICENSE      => 'perl_5',
     PREREQ_PM    => {
 	'Imager'     => 0,
 	'Image::Xpm' => 0,
